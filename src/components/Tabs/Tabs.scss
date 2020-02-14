@@ -3,7 +3,13 @@
 $item-min-height: rem(16px);
 $item-min-width: rem(50px);
 $item-vertical-padding: $item-min-height / 2;
+$underline-height: border-width(thicker);
+$tab-separation-spacing: spacing(tight);
 $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
+
+@mixin horizontal-tab-padding() {
+  padding: 0 $tab-separation-spacing / 2;
+}
 
 .Tabs {
   display: flex;
@@ -12,6 +18,10 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   padding: 0;
   border-bottom: border();
   list-style: none;
+
+  &.newDesignLanguage {
+    padding: $tab-separation-spacing $tab-separation-spacing / 2;
+  }
 }
 
 .fitted {
@@ -48,13 +58,17 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   @include unstyled-button;
   @include text-style-body;
   @include text-emphasis-subdued;
+  @include focus-ring;
+  color: var(--p-text, color('ink', 'lighter'));
+
   position: relative;
   justify-content: center;
   width: 100%;
   min-width: 100%; // IE11 fix for overflowing flex items from parent container
   margin-top: 1px;
   margin-bottom: -1px;
-  padding: 0 spacing();
+  padding: var(--p-override-zero, 0 spacing());
+  border-radius: var(--p-border-radius-base);
   outline: none;
   text-align: center;
   white-space: nowrap;
@@ -62,10 +76,13 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   cursor: pointer;
 
   &:hover {
+    background: var(--p-surface-hovered);
+
     .Title {
       @include text-emphasis-normal;
       text-decoration: none;
-      border-bottom: border-width(thicker) solid color('sky');
+      border-bottom: var(--p-override-none, $underline-height) solid
+        color('sky');
 
       @media (-ms-high-contrast: active) {
         border-bottom-color: ms-high-contrast-color('selected-text-background');
@@ -74,24 +91,37 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   }
 
   &:focus {
-    box-shadow: inset 0 0 2px 0 $focus-state-box-shadow-color,
-      0 0 2px 0 $focus-state-box-shadow-color;
+    &:not(:active) {
+      @include focus-ring($style: 'focused');
+    }
+    background: var(--p-surface-pressed);
+    box-shadow: var(
+      --p-override-none,
+      inset 0 0 2px 0 $focus-state-box-shadow-color,
+      0 0 2px 0 $focus-state-box-shadow-color
+    );
 
     .Title {
       @include text-emphasis-normal;
-      border-bottom: border-width(thicker) solid color('indigo', 'light');
+      border-bottom: var(--p-override-none, $underline-height) solid
+        color('indigo', 'light');
     }
   }
 
   &.Tab-selected {
+    background: var(--p-surface-primary-selected);
+
     // stylelint-disable-next-line selector-max-class
     .Title {
-      border-bottom: border-width(thicker) solid color('indigo');
-    }
-    @media (-ms-high-contrast: active) {
-      outline: 1px solid ms-high-contrast-color('selected-text');
-      background: ms-high-contrast-color('selected-text-background');
-      border-bottom-color: ms-high-contrast-color('selected-text-background');
+      border-bottom: var(--p-override-none, $underline-height) solid
+        color('indigo');
+      color: var(--p-action-primary);
+
+      @media (-ms-high-contrast: active) {
+        outline: 1px solid ms-high-contrast-color('selected-text');
+        background: ms-high-contrast-color('selected-text-background');
+        border-bottom-color: ms-high-contrast-color('selected-text-background');
+      }
     }
   }
 }
@@ -103,7 +133,7 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
 .Title {
   display: block;
   padding: spacing() 0 (spacing() - border-width(thicker)) 0;
-  border-bottom: border-width(thicker) solid transparent;
+  border-bottom: var(--p-override-none, $underline-height) solid transparent;
   min-width: $item-min-width;
 }
 
@@ -204,8 +234,10 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   display: block;
   justify-content: center;
   height: 100%;
-  margin: 1px 1px -1px 0;
+  margin: var(--p-override-zero, 1px 1px -1px 0);
   padding: 0 spacing();
+  border-radius: var(--p-border-radius-base);
+
   background-color: transparent;
   cursor: pointer;
   border: none;
@@ -213,9 +245,12 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   text-align: center;
 
   &:hover {
+    background-color: var(--p-surface-hovered, transparent);
+
     .Title {
       @include recolor-icon(color('ink'));
-      border-bottom: border-width(thicker) solid color('sky');
+      border-bottom: var(--p-override-none, $underline-height) solid
+        color('sky');
 
       @media (-ms-high-contrast: active) {
         @include recolor-icon(color('black'));
@@ -230,12 +265,20 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   }
 
   &:focus {
-    box-shadow: inset 0 0 2px 0 $focus-state-box-shadow-color,
-      0 0 2px 0 $focus-state-box-shadow-color;
+    box-shadow: var(
+      --p-override-none,
+      inset 0 0 2px 0 $focus-state-box-shadow-color,
+      0 0 2px 0 $focus-state-box-shadow-color
+    );
 
     .Title {
-      border-bottom: border-width(thicker) solid color('indigo', 'light');
+      border-bottom: var(--p-override-none, $underline-height) solid
+        color('indigo', 'light');
     }
+  }
+
+  &:active {
+    background-color: var(--p-surface-pressed, transparent);
   }
 }
 
@@ -243,4 +286,39 @@ $focus-state-box-shadow-color: rgba(92, 106, 196, 0.8);
   display: flex;
   visibility: hidden;
   height: 0;
+}
+
+// stylelint-disable selector-max-class
+.newDesignLanguage {
+  .Title {
+    padding: spacing(tight) spacing();
+  }
+
+  .TabContainer {
+    position: relative;
+    @include horizontal-tab-padding;
+  }
+
+  .DisclosureTab {
+    @include horizontal-tab-padding;
+  }
+
+  .Underline::after {
+    content: '';
+    position: absolute;
+
+    bottom: -1 * $tab-separation-spacing;
+
+    // center alignment
+    left: 0;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
+
+    height: $underline-height;
+    background: var(--p-action-primary);
+    width: calc(100% - #{$tab-separation-spacing});
+    border-top-left-radius: var(--p-border-radius-base);
+    border-top-right-radius: var(--p-border-radius-base);
+  }
 }
