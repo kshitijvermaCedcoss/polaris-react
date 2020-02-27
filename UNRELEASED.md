@@ -21,4 +21,6 @@
 
 ### Code quality
 
+- Improve scripts/build-consumer.js' robustness ([#2793](https://github.com/Shopify/polaris-react/pull/2793))
+
 ### Deprecations
