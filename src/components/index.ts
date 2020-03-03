@@ -221,7 +221,7 @@ export {Truncate, TruncateProps} from './Truncate';
 
 export {UnstyledLink, UnstyledLinkProps} from './UnstyledLink';
 
-export {VideoCard} from './VideoCard';
+export {MediaCard} from './MediaCard';
 
 export {VideoThumbnail} from './VideoThumbnail';
 
